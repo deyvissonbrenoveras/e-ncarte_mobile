@@ -1,0 +1,12 @@
+{
+  "name": "e-ncarte_mobile",
+  "displayName": "e-ncarte_mobile",
+  "expo": {
+    "name": "e-ncarte_mobile",
+    "slug": "e-ncarte_mobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
