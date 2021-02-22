@@ -6,15 +6,18 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 
 import { StatusBar } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { store, persistor } from '~/store';
-
 import App from './App';
+import theme from './styles/theme';
 
 const Index = () => (
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <StatusBar barStyle='light-content' backgroundColor='rgb(237,47,87)' />
-      <App />
+      <PaperProvider theme={theme}>
+        <App />
+      </PaperProvider>
     </PersistGate>
   </Provider>
 );
