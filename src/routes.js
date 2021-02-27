@@ -2,23 +2,53 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import theme from '~/styles/theme';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import SelectStore from '~/pages/SelectStore';
 import ShowcaseStore from '~/pages/showcase/Store';
 import ShowcaseInfo from '~/pages/showcase/Info';
 import ShowcaseCart from '~/pages/showcase/Cart';
+import ShowcasePartner from '~/pages/showcase/Partner';
 
 function Routes() {
   const Stack = createStackNavigator();
   const Tab = createMaterialTopTabNavigator();
-  function ShowcaseTabScreen({ ...props }) {
+  function ShowcaseTabScreen() {
     return (
-      <Tab.Navigator {...props}>
-        <Tab.Screen name='store' component={ShowcaseStore} />
-        <Tab.Screen name='info' component={ShowcaseInfo} />
-        <Tab.Screen name='cart' component={ShowcaseCart} />
+      <Tab.Navigator tabBarOptions={{ showIcon: true, showLabel: false }}>
+        <Tab.Screen
+          name='store'
+          component={ShowcaseStore}
+          options={{
+            tabBarIcon: () => (
+              <Icon name='store' color={theme.colors.encarte} size={20} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name='info'
+          component={ShowcaseInfo}
+          options={{
+            tabBarIcon: () => (
+              <Icon name='info' color={theme.colors.encarte} size={20} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name='cart'
+          component={ShowcaseCart}
+          options={{
+            tabBarIcon: () => (
+              <Icon
+                name='shopping-cart'
+                color={theme.colors.encarte}
+                size={20}
+              />
+            ),
+          }}
+        />
       </Tab.Navigator>
     );
   }
@@ -41,7 +71,14 @@ function Routes() {
           name='showcase'
           component={ShowcaseTabScreen}
           options={({ route }) => ({
-            title: route.params.storeName,
+            title: route.params.params.storeName,
+          })}
+        />
+        <Stack.Screen
+          name='partner'
+          component={ShowcasePartner}
+          options={({ route }) => ({
+            title: route.params.partner.name,
           })}
         />
       </Stack.Navigator>

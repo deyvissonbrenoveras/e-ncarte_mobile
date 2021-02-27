@@ -58,5 +58,12 @@ const fontConfig = {
 };
 export default {
   ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    encarte: '#ed2f57',
+    stoke: '#383838',
+    greyBorder: '#d8d8d8',
+    descriptionBackground: '#FBFBFB',
+  },
   fonts: configureFonts(fontConfig),
 };
