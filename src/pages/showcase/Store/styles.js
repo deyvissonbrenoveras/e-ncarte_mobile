@@ -128,4 +128,28 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e3e3e3',
   },
+  merelyIllustrativeImages: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  shelfLife: {
+    padding: 2,
+    paddingTop: 4,
+    paddingBottom: 4,
+    fontSize: 12,
+  },
+  socialNetworks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  facebook: { color: '#4267B2', marginLeft: 10 },
+  instagram: { color: '#C13584', marginLeft: 10 },
+  whatsapp: {
+    color: '#fff',
+    backgroundColor: '#128C7E',
+    borderRadius: 10,
+    marginLeft: 10,
+  },
 });

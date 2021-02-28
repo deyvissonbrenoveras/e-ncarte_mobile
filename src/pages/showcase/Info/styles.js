@@ -47,4 +47,17 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginLeft: 10,
   },
+  address: {
+    flex: 1,
+    height: 64,
+    borderWidth: 1,
+    borderColor: theme.colors.greyBorder,
+    borderRadius: 10,
+    padding: 2,
+  },
+  addressText: {
+    fontSize: 16,
+    color: theme.colors.stoke,
+    textAlign: 'left',
+  },
 });
