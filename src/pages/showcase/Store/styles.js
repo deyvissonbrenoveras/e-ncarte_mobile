@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import theme from '~/styles/theme';
 
 export default StyleSheet.create({
   container: {
@@ -128,6 +129,12 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e3e3e3',
   },
+  footer: {
+    marginTop: 2,
+    paddingTop: 2,
+    borderTopWidth: 2,
+    borderColor: theme.colors.encarte,
+  },
   merelyIllustrativeImages: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -151,5 +158,12 @@ export default StyleSheet.create({
     backgroundColor: '#128C7E',
     borderRadius: 10,
     marginLeft: 10,
+  },
+  info: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    textAlign: 'center',
+    marginVertical: 8,
+    textTransform: 'uppercase',
   },
 });

@@ -8,6 +8,7 @@ import {
   Linking,
 } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
 
 import { TextInput, useTheme } from 'react-native-paper';
@@ -29,9 +30,12 @@ function Store({ navigation, route }) {
 
   const [productsFound, setProductsFound] = useState(null);
 
+  const isFocused = useIsFocused();
   useEffect(() => {
-    dispatch(loadRequest(storeURL));
-  }, []);
+    if (isFocused) {
+      dispatch(loadRequest(storeURL));
+    }
+  }, [isFocused]);
 
   const store = useMemo(() => {
     // Filter all categories
@@ -85,9 +89,6 @@ function Store({ navigation, route }) {
 
     return { ...showcase, products, categories, shelfLifeStart, shelfLifeEnd };
   }, [showcase]);
-  useEffect(() => {
-    console.tron.log(store);
-  }, [store]);
   function handleSearch(value) {
     if (value.length === 0) {
       setProductsFound(null);
@@ -269,7 +270,7 @@ function Store({ navigation, route }) {
               )
             }
             ListFooterComponent={
-              <View>
+              <View style={styles.footer}>
                 {store.logo && (
                   <TouchableOpacity
                     onPress={() => {
@@ -367,6 +368,15 @@ function Store({ navigation, route }) {
                   shelfLifeStart={store.shelfLifeStart}
                   shelfLifeEnd={store.shelfLifeEnd}
                 />
+                {store.address && store.city && (
+                  <>
+                    <Text style={styles.info}>Endereço: {store.address}</Text>
+                    <Text style={styles.info}>{store.city}.</Text>
+                  </>
+                )}
+                {store.phone && (
+                  <Text style={styles.info}>Contato: {store.phone}</Text>
+                )}
               </View>
             }
           />

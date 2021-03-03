@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import theme from '~/styles/theme';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
+import RouteParamsContext from '~/services/RouteParamsContext';
 
 import SelectStore from '~/pages/SelectStore';
 import ShowcaseStore from '~/pages/showcase/Store';
@@ -15,41 +15,43 @@ import ShowcasePartner from '~/pages/showcase/Partner';
 function Routes() {
   const Stack = createStackNavigator();
   const Tab = createMaterialTopTabNavigator();
-  function ShowcaseTabScreen() {
+  function ShowcaseTabScreen({ route }) {
     return (
-      <Tab.Navigator tabBarOptions={{ showIcon: true, showLabel: false }}>
-        <Tab.Screen
-          name='store'
-          component={ShowcaseStore}
-          options={{
-            tabBarIcon: () => (
-              <Icon name='store' color={theme.colors.encarte} size={20} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name='info'
-          component={ShowcaseInfo}
-          options={{
-            tabBarIcon: () => (
-              <Icon name='info' color={theme.colors.encarte} size={20} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name='cart'
-          component={ShowcaseCart}
-          options={{
-            tabBarIcon: () => (
-              <Icon
-                name='shopping-cart'
-                color={theme.colors.encarte}
-                size={20}
-              />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      <RouteParamsContext.Provider value={route}>
+        <Tab.Navigator tabBarOptions={{ showIcon: true, showLabel: false }}>
+          <Tab.Screen
+            name='store'
+            component={ShowcaseStore}
+            options={{
+              tabBarIcon: () => (
+                <Icon name='store' color={theme.colors.encarte} size={20} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name='info'
+            component={ShowcaseInfo}
+            options={{
+              tabBarIcon: () => (
+                <Icon name='info' color={theme.colors.encarte} size={20} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name='cart'
+            component={ShowcaseCart}
+            options={{
+              tabBarIcon: () => (
+                <Icon
+                  name='shopping-cart'
+                  color={theme.colors.encarte}
+                  size={20}
+                />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </RouteParamsContext.Provider>
     );
   }
   return (

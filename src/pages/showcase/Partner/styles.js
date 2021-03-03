@@ -7,15 +7,11 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 4,
   },
-  showcaseLogoButton: {
-    elevation: 5,
-    backgroundColor: '#fff',
-  },
-  showcaseLogo: {
+  partnerLogo: {
     height: 150,
     resizeMode: 'contain',
   },
-  showcaseName: {
+  partnerName: {
     fontSize: 28,
     textAlign: 'center',
     height: 80,
@@ -28,8 +24,14 @@ export default StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
+  site: {
+    height: 64,
+    borderWidth: 1,
+    borderColor: theme.colors.greyBorder,
+    borderRadius: 10,
+    padding: 2,
+  },
   socialNetworks: {
-    flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
     textAlign: 'left',
@@ -47,18 +49,5 @@ export default StyleSheet.create({
     backgroundColor: '#128C7E',
     borderRadius: 10,
     marginLeft: 10,
-  },
-  address: {
-    flex: 1,
-    height: 64,
-    borderWidth: 1,
-    borderColor: theme.colors.greyBorder,
-    borderRadius: 10,
-    padding: 2,
-  },
-  addressText: {
-    fontSize: 16,
-    color: theme.colors.stoke,
-    textAlign: 'left',
   },
 });
