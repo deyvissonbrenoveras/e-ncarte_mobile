@@ -102,7 +102,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   productPrice: {
-    // color: theme.palette.encarte,
+    color: theme.colors.encarte,
     fontSize: 14,
     fontWeight: 'bold',
   },

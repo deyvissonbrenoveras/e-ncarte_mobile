@@ -25,11 +25,19 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   site: {
-    height: 64,
+    height: 25,
     borderWidth: 1,
     borderColor: theme.colors.greyBorder,
     borderRadius: 10,
     padding: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // flexWrap: 'wrap',
+    // alignItems: 'flex-start',
+  },
+  siteText: {
+    // borderWidth: 1,
+    marginLeft: 5,
   },
   socialNetworks: {
     alignItems: 'center',

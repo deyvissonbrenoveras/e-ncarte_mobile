@@ -202,7 +202,7 @@ function Store({ navigation, route }) {
                         <TouchableOpacity
                           style={styles.featuredProductItem}
                           onPress={() => {
-                            navigation.navigate('partner', { partner: item });
+                            navigation.navigate('product', { product: item });
                           }}
                         >
                           <Image
@@ -232,7 +232,12 @@ function Store({ navigation, route }) {
             }
             renderItem={({ item }) =>
               productsFound !== null ? (
-                <TouchableOpacity onPress={() => {}} style={styles.productCard}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('product', { product: item });
+                  }}
+                  style={styles.productCard}
+                >
                   <Image
                     source={{ uri: item.image.url }}
                     style={styles.productImage}
@@ -252,7 +257,9 @@ function Store({ navigation, route }) {
                     }
                     renderItem={({ item: product }) => (
                       <TouchableOpacity
-                        onPress={() => {}}
+                        onPress={() => {
+                          navigation.navigate('product', { product });
+                        }}
                         style={styles.productCard}
                       >
                         <Image

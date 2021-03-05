@@ -23,12 +23,20 @@ function Partner({ route }) {
             />
           )}
           <Text style={styles.partnerName}>{partner.name}</Text>
-          {partner.site && (
+          {partner.site.length > 0 && (
             <>
               <Text style={styles.subtitle}>Endereço</Text>
-              <View style={styles.site}>
-                <Text style={styles.addressText}>{partner.site}</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(partner.site);
+                }}
+                style={styles.site}
+              >
+                <Icon name='link' size={20} />
+                <Text numberOfLines={1} style={styles.siteText}>
+                  {partner.site}
+                </Text>
+              </TouchableOpacity>
             </>
           )}
           {(partner.facebook || partner.instagram || partner.whatsapp) && (

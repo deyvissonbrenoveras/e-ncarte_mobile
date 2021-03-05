@@ -11,6 +11,7 @@ import ShowcaseStore from '~/pages/showcase/Store';
 import ShowcaseInfo from '~/pages/showcase/Info';
 import ShowcaseCart from '~/pages/showcase/Cart';
 import ShowcasePartner from '~/pages/showcase/Partner';
+import ShowcaseProduct from '~/pages/showcase/Product';
 
 function Routes() {
   const Stack = createStackNavigator();
@@ -82,6 +83,13 @@ function Routes() {
           options={({ route }) => ({
             title: route.params.partner.name,
           })}
+        />
+        <Stack.Screen
+          name='product'
+          component={ShowcaseProduct}
+          // options={({ route }) => ({
+          //   title: route.params.partner.name,
+          // })}
         />
       </Stack.Navigator>
     </NavigationContainer>
