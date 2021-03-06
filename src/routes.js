@@ -87,9 +87,9 @@ function Routes() {
         <Stack.Screen
           name='product'
           component={ShowcaseProduct}
-          // options={({ route }) => ({
-          //   title: route.params.partner.name,
-          // })}
+          options={() => ({
+            title: 'Visualizar produto',
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -8,7 +8,7 @@ import {
   Linking,
 } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import { useIsFocused } from '@react-navigation/native';
+// import { useIsFocused } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
 
 import { TextInput, useTheme } from 'react-native-paper';
@@ -30,12 +30,10 @@ function Store({ navigation, route }) {
 
   const [productsFound, setProductsFound] = useState(null);
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
   useEffect(() => {
-    if (isFocused) {
-      dispatch(loadRequest(storeURL));
-    }
-  }, [isFocused]);
+    dispatch(loadRequest(storeURL));
+  }, []);
 
   const store = useMemo(() => {
     // Filter all categories
@@ -202,7 +200,10 @@ function Store({ navigation, route }) {
                         <TouchableOpacity
                           style={styles.featuredProductItem}
                           onPress={() => {
-                            navigation.navigate('product', { product: item });
+                            navigation.navigate('product', {
+                              product: item,
+                              storeId: store.id,
+                            });
                           }}
                         >
                           <Image
@@ -234,7 +235,10 @@ function Store({ navigation, route }) {
               productsFound !== null ? (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('product', { product: item });
+                    navigation.navigate('product', {
+                      product: item,
+                      storeId: store.id,
+                    });
                   }}
                   style={styles.productCard}
                 >
@@ -258,7 +262,10 @@ function Store({ navigation, route }) {
                     renderItem={({ item: product }) => (
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.navigate('product', { product });
+                          navigation.navigate('product', {
+                            product,
+                            storeId: store.id,
+                          });
                         }}
                         style={styles.productCard}
                       >

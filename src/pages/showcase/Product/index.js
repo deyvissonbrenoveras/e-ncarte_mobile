@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   View,
   Text,
@@ -11,12 +12,19 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import PriceTypeEnum from '~/util/PriceTypeEnum';
 import { formatPrice } from '~/util/format';
 import styles from './styles';
+import { addProduct } from '~/store/modules/cart/actions';
 
-function Product({ route }) {
-  const { product } = route.params;
+function Product({ route, navigation }) {
+  const dispatch = useDispatch();
+  const { product, storeId } = route.params;
 
   const [amount, setAmount] = useState('1');
   const [total, setTotal] = useState(null);
+
+  function handleAddProduct() {
+    dispatch(addProduct(storeId, product, amount));
+    navigation.navigate('cart');
+  }
 
   function decreaseAmount() {
     if (amount > 1) {
@@ -101,8 +109,11 @@ function Product({ route }) {
             <Icon style={styles.iconColor} name='add' size={25} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.total}>{total}</Text>
-        <TouchableOpacity>
+        <Text style={styles.total}>
+          {product.priceType !== PriceTypeEnum.SPECIAL_OFFER &&
+            (total || product.formattedPrice)}
+        </Text>
+        <TouchableOpacity onPress={handleAddProduct}>
           <Icon style={styles.iconColor} name='add-shopping-cart' size={25} />
         </TouchableOpacity>
       </View>
