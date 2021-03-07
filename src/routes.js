@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import theme from '~/styles/theme';
 import RouteParamsContext from '~/services/RouteParamsContext';
 
+import Header from '~/components/Header';
+
 import SelectStore from '~/pages/SelectStore';
 import ShowcaseStore from '~/pages/showcase/Store';
 import ShowcaseInfo from '~/pages/showcase/Info';
@@ -19,7 +21,13 @@ function Routes() {
   function ShowcaseTabScreen({ route }) {
     return (
       <RouteParamsContext.Provider value={route}>
-        <Tab.Navigator tabBarOptions={{ showIcon: true, showLabel: false }}>
+        <Tab.Navigator
+          tabBarOptions={{
+            showIcon: true,
+            showLabel: false,
+            indicatorStyle: { backgroundColor: theme.colors.encarte },
+          }}
+        >
           <Tab.Screen
             name='store'
             component={ShowcaseStore}
@@ -59,10 +67,10 @@ function Routes() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerTitleStyle: {
-            fontFamily: 'Roboto-Light',
-            fontWeight: 'bold',
+          headerStyle: {
+            height: 50,
           },
+          headerTitle: (props) => <Header {...props} />,
         }}
       >
         <Stack.Screen

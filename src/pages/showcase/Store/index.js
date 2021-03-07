@@ -128,7 +128,7 @@ function Store({ navigation, route }) {
       return <></>;
     }
     return (
-      <Text style={{ ...styles.shelfLife, textAlign: align }}>
+      <Text style={{ ...styles.shelfLife, textAlign: align, fontSize: 10 }}>
         {`PREÇOS VÁLIDOS DE ${shelfLifeStart}, ATÉ ${shelfLifeEnd}.`}
       </Text>
     );
@@ -157,6 +157,11 @@ function Store({ navigation, route }) {
                     />
                   </TouchableOpacity>
                 )}
+                <ShelfLife
+                  align='right'
+                  shelfLifeStart={store.shelfLifeStart}
+                  shelfLifeEnd={store.shelfLifeEnd}
+                />
                 {store.partners && (
                   <View>
                     <Text style={styles.subtitle}>PARCEIROS</Text>
