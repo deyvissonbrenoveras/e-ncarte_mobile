@@ -1,4 +1,4 @@
-package com.encartemobile.generated;
+package com.encarte.app.generated;
 
 import java.util.Arrays;
 import java.util.List;

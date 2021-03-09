@@ -1,9 +1,9 @@
 {
-  "name": "e-ncarte_mobile",
-  "displayName": "e-ncarte_mobile",
+  "name": "encarte",
+  "displayName": "encarte",
   "expo": {
-    "name": "e-ncarte_mobile",
-    "slug": "e-ncarte_mobile",
+    "name": "encarte",
+    "slug": "encarte",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

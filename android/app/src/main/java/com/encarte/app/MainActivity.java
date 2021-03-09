@@ -1,4 +1,4 @@
-package com.encartemobile;
+package com.encarte.app;
 
 import android.os.Bundle;
 

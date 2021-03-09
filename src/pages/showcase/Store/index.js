@@ -387,15 +387,15 @@ function Store({ navigation, route }) {
                   shelfLifeStart={store.shelfLifeStart}
                   shelfLifeEnd={store.shelfLifeEnd}
                 />
-                {store.address && store.city && (
+                {store.address && store.city ? (
                   <>
                     <Text style={styles.info}>Endereço: {store.address}</Text>
                     <Text style={styles.info}>{store.city}.</Text>
                   </>
-                )}
-                {store.phone && (
+                ) : null}
+                {store.phone ? (
                   <Text style={styles.info}>Contato: {store.phone}</Text>
-                )}
+                ) : null}
               </View>
             }
           />

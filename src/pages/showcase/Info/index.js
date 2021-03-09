@@ -107,12 +107,16 @@ const Info = () => {
               </View>
             </>
           )}
-          <Text style={styles.subtitle}>Endereço</Text>
-          <View style={styles.address}>
-            <Text style={styles.addressText}>
-              {`${store.address}, ${store.city}.`}
-            </Text>
-          </View>
+          {store.address && store.city ? (
+            <>
+              <Text style={styles.subtitle}>Endereço</Text>
+              <View style={styles.address}>
+                <Text style={styles.addressText}>
+                  {`${store.address}, ${store.city}.`}
+                </Text>
+              </View>
+            </>
+          ) : null}
         </>
       )}
     </ScrollView>

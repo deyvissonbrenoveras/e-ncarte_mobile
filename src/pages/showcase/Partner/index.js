@@ -2,15 +2,11 @@ import React from 'react';
 import { Text, View, Image, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useEffect } from 'react/cjs/react.development';
 
 import styles from './styles';
 
 function Partner({ route }) {
   const { partner } = route.params;
-  useEffect(() => {
-    console.tron.log(partner);
-  }, [partner]);
 
   return (
     <View style={styles.container}>

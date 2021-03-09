@@ -163,7 +163,7 @@ function Cart() {
           )}
           <View style={styles.total}>
             <Text style={styles.totalText}>Valor Total: {total}</Text>
-            {store.whatsapp && (
+            {store.whatsapp && store.whatsapp.length > 0 ? (
               <TouchableOpacity style={styles.totalButton} onPress={handleSend}>
                 <Text style={styles.totalButtonText}> Enviar pedido</Text>
                 <CommunityIcon
@@ -172,7 +172,7 @@ function Cart() {
                   size={25}
                 />
               </TouchableOpacity>
-            )}
+            ) : null}
           </View>
         </>
       )}
