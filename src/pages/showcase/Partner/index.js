@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, Image, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { WebView } from 'react-native-webview';
 
 import styles from './styles';
 
@@ -104,6 +105,13 @@ function Partner({ route }) {
                 )}
               </View>
             </>
+          )}
+
+          {partner.customizableField && (
+            <WebView
+              style={styles.customizableField}
+              source={{ html: partner.customizableField }}
+            />
           )}
         </>
       )}

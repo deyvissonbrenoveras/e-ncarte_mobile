@@ -35,6 +35,7 @@
     "react-native-unimodules": "~0.12.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.2.4",
     "react-redux": "^7.2.2",
     "reactotron-react-native": "^5.0.0",
     "reactotron-redux": "^3.1.3",

@@ -58,4 +58,8 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginLeft: 10,
   },
+  customizableField: {
+    marginTop: 20,
+    marginBottom: 50,
+  },
 });
