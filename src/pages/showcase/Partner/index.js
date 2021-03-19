@@ -40,7 +40,7 @@ function Partner({ route }) {
             <>
               <Text style={styles.subtitle}>Redes sociais</Text>
               <View style={styles.socialNetworks}>
-                {partner.facebook && (
+                {partner.facebook ? (
                   <TouchableOpacity
                     onPress={() => {
                       Linking.canOpenURL(`facebook://${partner.facebook}`).then(
@@ -60,8 +60,8 @@ function Partner({ route }) {
                   >
                     <Icon name='facebook' size={40} style={styles.facebook} />
                   </TouchableOpacity>
-                )}
-                {partner.instagram && (
+                ) : null}
+                {partner.instagram ? (
                   <TouchableOpacity
                     onPress={() => {
                       Linking.canOpenURL(
@@ -81,8 +81,8 @@ function Partner({ route }) {
                   >
                     <Icon name='instagram' size={40} style={styles.instagram} />
                   </TouchableOpacity>
-                )}
-                {partner.whatsapp && (
+                ) : null}
+                {partner.whatsapp ? (
                   <TouchableOpacity
                     onPress={() => {
                       Linking.canOpenURL(
@@ -102,17 +102,17 @@ function Partner({ route }) {
                   >
                     <Icon name='whatsapp' size={40} style={styles.whatsapp} />
                   </TouchableOpacity>
-                )}
+                ) : null}
               </View>
             </>
           )}
 
-          {partner.customizableField && (
+          {partner.customizableField ? (
             <WebView
               style={styles.customizableField}
               source={{ html: partner.customizableField }}
             />
-          )}
+          ) : null}
         </>
       )}
     </View>
