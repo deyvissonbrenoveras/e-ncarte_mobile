@@ -60,6 +60,7 @@ export default {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
+    primary: '#3f51b5',
     encarte: '#ed2f57',
     stoke: '#383838',
     greyBorder: '#d8d8d8',

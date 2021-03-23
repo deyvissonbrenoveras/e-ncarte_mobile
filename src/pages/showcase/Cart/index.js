@@ -4,14 +4,22 @@ import { View, Text, FlatList, Image, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Button, Dialog, Portal } from 'react-native-paper';
 
-import { removeProduct, changeAmount } from '~/store/modules/cart/actions';
+import {
+  removeProduct,
+  changeAmount,
+  clearCart,
+} from '~/store/modules/cart/actions';
 import { formatPrice } from '~/util/format';
 import PriceTypeEnum from '~/util/PriceTypeEnum';
 import styles from './styles';
+import theme from '~/styles/theme';
 
 function Cart() {
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+
   const store = useSelector((state) => state.showcase.showcase);
   const cart = useSelector((state) =>
     state.cart.cart.filter((crt) => crt.storeId === store.id)[0]
@@ -57,6 +65,7 @@ function Cart() {
         `https://api.whatsapp.com/send?phone=${store.whatsapp}&text=${buyList}`
       );
     });
+    setModalVisible(true);
   }
   function handleRemove(productId) {
     dispatch(removeProduct(store.id, productId));
@@ -92,6 +101,19 @@ function Cart() {
         </View>
       ) : (
         <>
+          <Button
+            icon='delete-forever'
+            mode='contained'
+            color={theme.colors.primary}
+            style={styles.clearCartButton}
+            labelStyle={styles.clearCartButtonLabel}
+            compact
+            onPress={() => {
+              dispatch(clearCart(store.id));
+            }}
+          >
+            LIMPAR CARRINHO
+          </Button>
           {cart && (
             <FlatList
               data={cart}
@@ -174,6 +196,44 @@ function Cart() {
               </TouchableOpacity>
             ) : null}
           </View>
+          <Portal>
+            <Dialog
+              visible={modalVisible}
+              onDismiss={() => {
+                setModalVisible(false);
+              }}
+            >
+              <Dialog.Title>Deseja limpar o carrinho?</Dialog.Title>
+              <Dialog.Actions>
+                <Button
+                  mode='contained'
+                  compact
+                  color={theme.colors.surface}
+                  style={styles.clearCartButtonModal}
+                  labelStyle={styles.clearCartButtonLabel}
+                  onPress={() => {
+                    setModalVisible(false);
+                  }}
+                >
+                  MANTER O CARRINHO
+                </Button>
+                <Button
+                  icon='delete-forever'
+                  mode='contained'
+                  color={theme.colors.primary}
+                  style={styles.clearCartButtonModal}
+                  labelStyle={styles.clearCartButtonLabel}
+                  compact
+                  onPress={() => {
+                    setModalVisible(false);
+                    dispatch(clearCart(store.id));
+                  }}
+                >
+                  LIMPAR CARRINHO
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </>
       )}
     </View>

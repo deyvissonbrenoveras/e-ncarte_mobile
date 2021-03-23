@@ -19,6 +19,20 @@ export default StyleSheet.create({
   emptyCartColor: {
     color: theme.colors.greyBorder,
   },
+  clearCartButton: {
+    width: 180,
+    marginHorizontal: 20,
+    marginVertical: 5,
+    height: 25,
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  clearCartButtonLabel: {
+    fontSize: 10,
+  },
+  clearCartButtonModal: {
+    flex: 0.5,
+  },
   productCard: {
     height: 120,
     alignItems: 'center',
