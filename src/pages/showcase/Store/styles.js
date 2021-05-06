@@ -41,8 +41,6 @@ export default StyleSheet.create({
     fontSize: 10,
   },
   featuredProductsList: {
-    // flex: 1,
-    // flexDirection: 'column'
     marginTop: 10,
   },
   featuredProductItem: {

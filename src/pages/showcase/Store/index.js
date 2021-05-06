@@ -8,7 +8,7 @@ import {
   Linking,
 } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
-// import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
 
 import { TextInput, useTheme } from 'react-native-paper';
@@ -26,14 +26,15 @@ function Store({ navigation, route }) {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const { showcase, loading } = useSelector((state) => state.showcase);
-  const { storeURL } = route.params;
+  const { storeURL, storeId, productToLoad } = route.params;
 
   const [productsFound, setProductsFound] = useState(null);
+  const [productLoaded, setProductLoaded] = useState(false);
 
-  // const isFocused = useIsFocused();
+  const isFocused = useIsFocused();
   useEffect(() => {
     dispatch(loadRequest(storeURL));
-  }, []);
+  }, [isFocused]);
 
   const store = useMemo(() => {
     // Filter all categories
@@ -86,6 +87,19 @@ function Store({ navigation, route }) {
       : null;
 
     return { ...showcase, products, categories, shelfLifeStart, shelfLifeEnd };
+  }, [showcase]);
+
+  useEffect(() => {
+    if (productToLoad && !productLoaded) {
+      navigation.navigate('product', {
+        product: {
+          ...productToLoad,
+          formattedPrice: formatPrice(productToLoad.price),
+        },
+        storeId,
+      });
+      setProductLoaded(true);
+    }
   }, [showcase]);
   function handleSearch(value) {
     if (value.length === 0) {
