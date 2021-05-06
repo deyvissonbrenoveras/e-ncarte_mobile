@@ -87,6 +87,9 @@ export default StyleSheet.create({
   },
   productModal: {
     flex: 1,
+  },
+  productModalContent: {
+    flex: 1,
     paddingHorizontal: 10,
   },
   modalCloseButton: {
@@ -103,6 +106,7 @@ export default StyleSheet.create({
     marginTop: 15,
     color: theme.colors.stoke,
     textAlign: 'center',
+    marginBottom: 30,
   },
   productModalDescription: {
     marginTop: 10,
@@ -118,5 +122,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     margin: 1,
+  },
+  productModalStoreName: {
+    textAlign: 'center',
+    color: '#000',
   },
 });

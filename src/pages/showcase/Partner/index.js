@@ -178,52 +178,57 @@ function Partner({ route, navigation }) {
                     >
                       <Icon name='close' size={20} />
                     </Button>
-
-                    <FlatList
-                      ListHeaderComponent={
-                        <>
-                          <Image
-                            source={{ uri: productModal.image.url }}
-                            style={styles.productModalImage}
-                          />
-                          <Text style={styles.productModalName}>
-                            {productModal.name}
-                          </Text>
-                          {productModal.description ? (
-                            <Text style={styles.productModalDescription}>
-                              {productModal.description}
+                    <View style={styles.productModalContent}>
+                      <FlatList
+                        ListHeaderComponent={
+                          <>
+                            <Image
+                              source={{ uri: productModal.image.url }}
+                              style={styles.productModalImage}
+                            />
+                            <Text style={styles.productModalName}>
+                              {productModal.name}
                             </Text>
-                          ) : null}
-                        </>
-                      }
-                      numColumns={2}
-                      data={productModal.stores}
-                      keyExtractor={(item) => String(item.id)}
-                      style={styles.productModalStore}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity
-                          style={styles.productModalItem}
-                          onPress={() => {
-                            setModalVisible(false);
-                            navigation.navigate('showcase', {
-                              screen: 'store',
-                              params: {
-                                storeId: item.id,
-                                storeURL: item.url,
-                                storeName: item.name,
-                                productToLoad: productModal,
-                              },
-                            });
-                          }}
-                        >
-                          <Image
-                            source={{ uri: item.logo.url }}
-                            style={styles.featuredProductImage}
-                          />
-                          <Text numberOfLines={1}>{item.name}</Text>
-                        </TouchableOpacity>
-                      )}
-                    />
+
+                            {productModal.stores &&
+                            productModal.stores.length > 0 ? (
+                              <Text style={styles.catalogSubtitle}>
+                                Encontre este e outros produtos em:
+                              </Text>
+                            ) : null}
+                          </>
+                        }
+                        numColumns={2}
+                        data={productModal.stores}
+                        keyExtractor={(item) => String(item.id)}
+                        style={styles.productModalStore}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={styles.productModalItem}
+                            onPress={() => {
+                              setModalVisible(false);
+                              navigation.navigate('showcase', {
+                                screen: 'store',
+                                params: {
+                                  storeId: item.id,
+                                  storeURL: item.url,
+                                  storeName: item.name,
+                                  productToLoad: productModal,
+                                },
+                              });
+                            }}
+                          >
+                            <Image
+                              source={{ uri: item.logo.url }}
+                              style={styles.featuredProductImage}
+                            />
+                            <Text style={styles.productModalStoreName}>
+                              {item.name}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    </View>
                   </Dialog>
                 </Portal>
               )}
