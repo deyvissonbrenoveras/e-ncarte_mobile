@@ -45,6 +45,14 @@ function Partner({ route, navigation }) {
             </TouchableOpacity>
           </>
         )}
+        {partner.regionalAgent.length > 0 && (
+          <>
+            <Text style={styles.subtitle}>Contato</Text>
+            <Text numberOfLines={1} style={styles.contact}>
+              {partner.regionalAgent}
+            </Text>
+          </>
+        )}
         {(partner.facebook || partner.instagram || partner.whatsapp) && (
           <>
             <Text style={styles.subtitle}>Redes sociais</Text>
@@ -91,20 +99,20 @@ function Partner({ route, navigation }) {
                   <Icon name='instagram' size={40} style={styles.instagram} />
                 </TouchableOpacity>
               ) : null}
-              {partner.whatsapp ? (
+              {partner.agentWhatsapp ? (
                 <TouchableOpacity
                   onPress={() => {
                     Linking.canOpenURL(
-                      `whatsapp://send?phone=${partner.whatsapp}`
+                      `whatsapp://send?phone=${partner.agentWhatsapp}`
                     ).then((supported) => {
                       if (supported) {
                         return Linking.openURL(
-                          `whatsapp://send?phone=${partner.whatsapp}`
+                          `whatsapp://send?phone=${partner.agentWhatsapp}`
                         );
                       }
 
                       return Linking.openURL(
-                        `https://api.whatsapp.com/send?phone=${partner.whatsapp}`
+                        `https://api.whatsapp.com/send?phone=${partner.agentWhatsapp}`
                       );
                     });
                   }}
