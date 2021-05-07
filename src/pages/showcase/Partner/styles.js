@@ -37,11 +37,18 @@ export default StyleSheet.create({
     padding: 2,
     flexDirection: 'row',
     alignItems: 'center',
-    // flexWrap: 'wrap',
-    // alignItems: 'flex-start',
+  },
+  contact: {
+    height: 25,
+    borderWidth: 1,
+    borderColor: theme.colors.greyBorder,
+    borderRadius: 10,
+    padding: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 5,
   },
   siteText: {
-    // borderWidth: 1,
     marginLeft: 5,
   },
   socialNetworks: {
