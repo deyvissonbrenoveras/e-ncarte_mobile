@@ -142,7 +142,8 @@ export default StyleSheet.create({
     padding: 2,
     paddingTop: 4,
     paddingBottom: 4,
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: 'bold',
   },
   socialNetworks: {
     flexDirection: 'row',

@@ -143,7 +143,7 @@ function Store({ navigation, route }) {
     }
     return (
       <Text style={{ ...styles.shelfLife, textAlign: align, fontSize: 10 }}>
-        {`PREÇOS VÁLIDOS DE ${shelfLifeStart}, ATÉ ${shelfLifeEnd}.`}
+        {`PREÇOS VÁLIDOS DE ${shelfLifeStart} ATÉ ${shelfLifeEnd}.`}
       </Text>
     );
   }
