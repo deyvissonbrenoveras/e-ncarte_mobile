@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 
 import { StatusBar } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
+import FlashMessage from 'react-native-flash-message';
 import { store, persistor } from '~/store';
 import App from './App';
 import theme from './styles/theme';
@@ -19,6 +20,7 @@ const Index = () => (
         <App />
       </PaperProvider>
     </PersistGate>
+    <FlashMessage position='top' />
   </Provider>
 );
 
