@@ -72,7 +72,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   productCard: {
-    height: 64,
+    height: 100,
     alignItems: 'center',
     paddingLeft: 2,
     flexDirection: 'row',
@@ -84,7 +84,7 @@ export default StyleSheet.create({
   productImage: {
     width: '100%',
     height: '100%',
-    maxWidth: 43,
+    maxWidth: 48,
     maxHeight: 60,
     resizeMode: 'contain',
   },
@@ -98,6 +98,10 @@ export default StyleSheet.create({
     height: '100%',
     padding: 4,
     flex: 1,
+  },
+  productName: {
+    color: '#000',
+    textAlign: 'right',
   },
   productPrice: {
     color: theme.colors.encarte,

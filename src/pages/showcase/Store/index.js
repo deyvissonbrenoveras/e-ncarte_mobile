@@ -15,12 +15,16 @@ import { TextInput, useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { showMessage } from 'react-native-flash-message';
 import slugify from '~/util/slugify';
 import { formatPrice } from '~/util/format';
 import Loading from '~/components/Loading';
 import { loadRequest } from '~/store/modules/showcase/actions';
 import PriceTypeEnum from '~/util/PriceTypeEnum';
 import styles from './styles';
+import theme from '~/styles/theme';
+
+import { addProduct } from '~/store/modules/cart/actions';
 
 function Store({ navigation, route }) {
   const dispatch = useDispatch();
@@ -135,6 +139,54 @@ function Store({ navigation, route }) {
           <Text style={styles.productPrice}>{product.formattedPrice}</Text>
         );
     }
+  }
+  function ProductItem({ product }) {
+    return (
+      <View style={styles.productCard}>
+        <TouchableOpacity
+          style={{ width: 60 }}
+          onPress={() => {
+            navigation.navigate('product', {
+              product,
+              storeId: store.id,
+            });
+          }}
+        >
+          <Image
+            source={{ uri: product.image.url }}
+            style={styles.productImage}
+          />
+        </TouchableOpacity>
+        <View style={styles.productContent}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('product', {
+                product,
+                storeId: store.id,
+              });
+            }}
+          >
+            <Text style={styles.productName}>{product.name}</Text>
+          </TouchableOpacity>
+          <ProductItemPrice product={product} />
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(addProduct(storeId, product, 1));
+              showMessage({
+                message: 'O produto foi adicionado ao carrinho',
+                type: 'success',
+              });
+            }}
+          >
+            <Icon
+              name='add-shopping-cart'
+              color={theme.colors.primary}
+              size={20}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   }
   function ShelfLife(params) {
     const { shelfLifeStart, shelfLifeEnd, align } = params;
@@ -252,24 +304,7 @@ function Store({ navigation, route }) {
             }
             renderItem={({ item }) =>
               productsFound !== null ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('product', {
-                      product: item,
-                      storeId: store.id,
-                    });
-                  }}
-                  style={styles.productCard}
-                >
-                  <Image
-                    source={{ uri: item.image.url }}
-                    style={styles.productImage}
-                  />
-                  <View style={styles.productContent}>
-                    <Text>{item.name}</Text>
-                    <ProductItemPrice product={item} />
-                  </View>
-                </TouchableOpacity>
+                <ProductItem product={item} />
               ) : (
                 item.products.length > 0 && (
                   <FlatList
@@ -279,24 +314,7 @@ function Store({ navigation, route }) {
                       <Text style={styles.categoryName}>{item.name}</Text>
                     }
                     renderItem={({ item: product }) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate('product', {
-                            product,
-                            storeId: store.id,
-                          });
-                        }}
-                        style={styles.productCard}
-                      >
-                        <Image
-                          source={{ uri: product.image.url }}
-                          style={styles.productImage}
-                        />
-                        <View style={styles.productContent}>
-                          <Text>{product.name}</Text>
-                          <ProductItemPrice product={product} />
-                        </View>
-                      </TouchableOpacity>
+                      <ProductItem product={product} />
                     )}
                   />
                 )

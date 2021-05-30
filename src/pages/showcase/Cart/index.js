@@ -121,7 +121,9 @@ function Cart() {
               renderItem={({ item: product }) => (
                 <View onPress={() => {}} style={styles.productCard}>
                   <Image
-                    source={{ uri: product.image.url }}
+                    source={{
+                      uri: product && product.image ? product.image.url : '',
+                    }}
                     style={styles.productImage}
                   />
                   <View style={styles.productContent}>
