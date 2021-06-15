@@ -210,7 +210,7 @@ function Store({ navigation, route }) {
             keyExtractor={(item) => String(item.id)}
             ListHeaderComponent={
               <>
-                {store.logo && (
+                {store.cover && (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('info');
@@ -218,7 +218,7 @@ function Store({ navigation, route }) {
                     style={styles.showcaseLogoButton}
                   >
                     <Image
-                      source={{ uri: store.logo.url }}
+                      source={{ uri: store.cover.url }}
                       style={styles.showcaseLogo}
                     />
                   </TouchableOpacity>
@@ -245,10 +245,12 @@ function Store({ navigation, route }) {
                             navigation.navigate('partner', { partner: item });
                           }}
                         >
-                          <Image
-                            source={{ uri: item.logo.url }}
-                            style={styles.partnerLogo}
-                          />
+                          {item.cover && (
+                            <Image
+                              source={{ uri: item.cover.url }}
+                              style={styles.partnerLogo}
+                            />
+                          )}
                           <Text numberOfLines={1} style={styles.partnerName}>
                             {item.name}
                           </Text>
