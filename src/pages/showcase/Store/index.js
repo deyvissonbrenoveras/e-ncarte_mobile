@@ -177,6 +177,7 @@ function Store({ navigation, route }) {
                 type: 'success',
               });
             }}
+            style={styles.addCartButton}
           >
             <Icon
               name='add-shopping-cart'
@@ -245,13 +246,13 @@ function Store({ navigation, route }) {
                             navigation.navigate('partner', { partner: item });
                           }}
                         >
-                          {item.cover && (
+                          {item.logo && (
                             <Image
-                              source={{ uri: item.cover.url }}
+                              source={{ uri: item.logo.url }}
                               style={styles.partnerLogo}
                             />
                           )}
-                          <Text numberOfLines={1} style={styles.partnerName}>
+                          <Text numberOfLines={2} style={styles.partnerName}>
                             {item.name}
                           </Text>
                         </BorderlessButton>
