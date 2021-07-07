@@ -37,7 +37,9 @@ function Store({ navigation, route }) {
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    dispatch(loadRequest(storeURL));
+    if (isFocused) {
+      dispatch(loadRequest(storeURL));
+    }
   }, [isFocused]);
 
   const store = useMemo(() => {
@@ -177,6 +179,7 @@ function Store({ navigation, route }) {
                 type: 'success',
               });
             }}
+            style={styles.addCartButton}
           >
             <Icon
               name='add-shopping-cart'
@@ -242,16 +245,18 @@ function Store({ navigation, route }) {
                         <BorderlessButton
                           style={styles.partnerItem}
                           onPress={() => {
-                            navigation.navigate('partner', { partner: item });
+                            navigation.navigate('partner', {
+                              partner: item,
+                            });
                           }}
                         >
-                          {item.cover && (
+                          {item.logo && (
                             <Image
-                              source={{ uri: item.cover.url }}
+                              source={{ uri: item.logo.url }}
                               style={styles.partnerLogo}
                             />
                           )}
-                          <Text numberOfLines={1} style={styles.partnerName}>
+                          <Text numberOfLines={2} style={styles.partnerName}>
                             {item.name}
                           </Text>
                         </BorderlessButton>

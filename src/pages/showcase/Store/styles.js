@@ -39,6 +39,7 @@ export default StyleSheet.create({
   },
   partnerName: {
     fontSize: 10,
+    textAlign: 'center',
   },
   featuredProductsList: {
     marginTop: 10,
@@ -130,6 +131,9 @@ export default StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#e3e3e3',
+  },
+  addCartButton: {
+    marginRight: 10,
   },
   footer: {
     marginTop: 2,
