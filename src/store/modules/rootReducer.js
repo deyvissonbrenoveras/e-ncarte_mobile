@@ -5,7 +5,7 @@ import { combineReducers } from 'redux';
 // import user from './user/reducer';
 import store from './store/reducer';
 // import product from './product/reducer';
-// import partner from './partner/reducer';
+import partner from './partner/reducer';
 // import category from './category/reducer';
 import showcase from './showcase/reducer';
 import cart from './cart/reducer';
@@ -16,7 +16,7 @@ export default combineReducers({
   // user,
   store,
   // product,
-  // partner,
+  partner,
   // category,
   showcase,
   cart,

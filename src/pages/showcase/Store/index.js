@@ -37,7 +37,9 @@ function Store({ navigation, route }) {
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    dispatch(loadRequest(storeURL));
+    if (isFocused) {
+      dispatch(loadRequest(storeURL));
+    }
   }, [isFocused]);
 
   const store = useMemo(() => {
@@ -243,7 +245,9 @@ function Store({ navigation, route }) {
                         <BorderlessButton
                           style={styles.partnerItem}
                           onPress={() => {
-                            navigation.navigate('partner', { partner: item });
+                            navigation.navigate('partner', {
+                              partner: item,
+                            });
                           }}
                         >
                           {item.logo && (

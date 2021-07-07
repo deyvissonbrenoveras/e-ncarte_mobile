@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Text,
   View,
@@ -10,14 +11,23 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { WebView } from 'react-native-webview';
 import { Button, Dialog, Portal } from 'react-native-paper';
+import Loading from '~/components/Loading';
 
 import styles from './styles';
+import { loadPartnerRequest } from '~/store/modules/partner/actions';
 
 function Partner({ route, navigation }) {
-  const { partner } = route.params;
+  const dispatch = useDispatch();
+
+  const partnerId = route.params.partner.id;
+  const { partner, loading } = useSelector((state) => state.partner);
 
   const [modalVisible, setModalVisible] = useState(true);
   const [productModal, setProductModal] = useState(null);
+
+  useEffect(() => {
+    dispatch(loadPartnerRequest(partnerId));
+  }, []);
 
   function HeaderComponent() {
     return (
@@ -143,111 +153,115 @@ function Partner({ route, navigation }) {
   }
   return (
     <View style={styles.container}>
-      {partner && (
-        <>
-          {partner.products && partner.products.length > 0 ? (
-            <>
-              <FlatList
-                ListHeaderComponent={HeaderComponent}
-                ListFooterComponent={FooterComponent}
-                numColumns={3}
-                data={partner.products}
-                keyExtractor={(item) => String(item.id)}
-                style={styles.featuredProductsList}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.featuredProductItem}
-                    onPress={() => {
-                      setProductModal(item);
-                      setModalVisible(true);
-                    }}
-                  >
-                    <Image
-                      source={{ uri: item.image.url }}
-                      style={styles.featuredProductImage}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
-              {productModal && (
-                <Portal>
-                  <Dialog
-                    visible={modalVisible}
-                    onDismiss={() => {
-                      setModalVisible(false);
-                    }}
-                    style={styles.productModal}
-                  >
-                    <Button
+      {loading ? (
+        <Loading />
+      ) : (
+        partner && (
+          <>
+            {partner.products && partner.products.length > 0 ? (
+              <>
+                <FlatList
+                  ListHeaderComponent={HeaderComponent}
+                  ListFooterComponent={FooterComponent}
+                  numColumns={3}
+                  data={partner.products}
+                  keyExtractor={(item) => String(item.id)}
+                  style={styles.featuredProductsList}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.featuredProductItem}
                       onPress={() => {
+                        setProductModal(item);
+                        setModalVisible(true);
+                      }}
+                    >
+                      <Image
+                        source={{ uri: item.image.url }}
+                        style={styles.featuredProductImage}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
+                {productModal && (
+                  <Portal>
+                    <Dialog
+                      visible={modalVisible}
+                      onDismiss={() => {
                         setModalVisible(false);
                       }}
-                      style={styles.modalCloseButton}
+                      style={styles.productModal}
                     >
-                      <Icon name='close' size={20} />
-                    </Button>
-                    <View style={styles.productModalContent}>
-                      <FlatList
-                        ListHeaderComponent={
-                          <>
-                            <Image
-                              source={{ uri: productModal.image.url }}
-                              style={styles.productModalImage}
-                            />
-                            <Text style={styles.productModalName}>
-                              {productModal.name}
-                            </Text>
-
-                            {productModal.stores &&
-                            productModal.stores.length > 0 ? (
-                              <Text style={styles.catalogSubtitle}>
-                                Encontre este e outros produtos em:
+                      <Button
+                        onPress={() => {
+                          setModalVisible(false);
+                        }}
+                        style={styles.modalCloseButton}
+                      >
+                        <Icon name='close' size={20} />
+                      </Button>
+                      <View style={styles.productModalContent}>
+                        <FlatList
+                          ListHeaderComponent={
+                            <>
+                              <Image
+                                source={{ uri: productModal.image.url }}
+                                style={styles.productModalImage}
+                              />
+                              <Text style={styles.productModalName}>
+                                {productModal.name}
                               </Text>
-                            ) : null}
-                          </>
-                        }
-                        numColumns={2}
-                        data={productModal.stores}
-                        keyExtractor={(item) => String(item.id)}
-                        style={styles.productModalStore}
-                        renderItem={({ item }) => (
-                          <TouchableOpacity
-                            style={styles.productModalItem}
-                            onPress={() => {
-                              setModalVisible(false);
-                              navigation.navigate('showcase', {
-                                screen: 'store',
-                                params: {
-                                  storeId: item.id,
-                                  storeURL: item.url,
-                                  storeName: item.name,
-                                  productToLoad: productModal,
-                                },
-                              });
-                            }}
-                          >
-                            <Image
-                              source={{ uri: item.logo.url }}
-                              style={styles.featuredProductImage}
-                            />
-                            <Text style={styles.productModalStoreName}>
-                              {item.name}
-                            </Text>
-                          </TouchableOpacity>
-                        )}
-                      />
-                    </View>
-                  </Dialog>
-                </Portal>
-              )}
-            </>
-          ) : (
-            <>
-              <HeaderComponent />
-              <FooterComponent />
-            </>
-          )}
-        </>
+
+                              {productModal.stores &&
+                              productModal.stores.length > 0 ? (
+                                <Text style={styles.catalogSubtitle}>
+                                  Encontre este e outros produtos em:
+                                </Text>
+                              ) : null}
+                            </>
+                          }
+                          numColumns={2}
+                          data={productModal.stores}
+                          keyExtractor={(item) => String(item.id)}
+                          style={styles.productModalStore}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              style={styles.productModalItem}
+                              onPress={() => {
+                                setModalVisible(false);
+                                navigation.navigate('showcase', {
+                                  screen: 'store',
+                                  params: {
+                                    storeId: item.id,
+                                    storeURL: item.url,
+                                    storeName: item.name,
+                                    productToLoad: productModal,
+                                  },
+                                });
+                              }}
+                            >
+                              <Image
+                                source={{ uri: item.logo.url }}
+                                style={styles.featuredProductImage}
+                              />
+                              <Text style={styles.productModalStoreName}>
+                                {item.name}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    </Dialog>
+                  </Portal>
+                )}
+              </>
+            ) : (
+              <>
+                <HeaderComponent />
+                <FooterComponent />
+              </>
+            )}
+          </>
+        )
       )}
     </View>
   );
