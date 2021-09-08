@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,25 +6,38 @@ import {
   FlatList,
   TouchableOpacity,
   Linking,
+  SafeAreaView,
+  Dimensions,
 } from 'react-native';
+
 import { BorderlessButton } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { TextInput, useTheme } from 'react-native-paper';
+import Carousel from 'react-native-snap-carousel';
+import { showMessage } from 'react-native-flash-message';
+
 import { format, parseISO } from 'date-fns';
 
-import { TextInput, useTheme } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { showMessage } from 'react-native-flash-message';
+
 import slugify from '~/util/slugify';
 import { formatPrice } from '~/util/format';
-import Loading from '~/components/Loading';
-import { loadRequest } from '~/store/modules/showcase/actions';
 import PriceTypeEnum from '~/util/PriceTypeEnum';
+
 import styles from './styles';
 import theme from '~/styles/theme';
 
+import Loading from '~/components/Loading';
+import CarouselSnapButton from '~/components/CarouselSnapButton';
+
 import { addProduct } from '~/store/modules/cart/actions';
+import { loadRequest } from '~/store/modules/showcase/actions';
+
+const CAROUSEL_SLIDER_WIDTH = Dimensions.get('window').width;
+const CAROUSEL_ITEM_WIDTH = CAROUSEL_SLIDER_WIDTH;
 
 function Store({ navigation, route }) {
   const dispatch = useDispatch();
@@ -32,8 +45,11 @@ function Store({ navigation, route }) {
   const { showcase, loading } = useSelector((state) => state.showcase);
   const { storeURL, storeId, productToLoad } = route.params;
 
+  const carousel = useRef(null);
+
   const [productsFound, setProductsFound] = useState(null);
   const [productLoaded, setProductLoaded] = useState(false);
+  const [carouselItems, setCarouselItems] = useState([]);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -94,6 +110,55 @@ function Store({ navigation, route }) {
 
     return { ...showcase, products, categories, shelfLifeStart, shelfLifeEnd };
   }, [showcase]);
+
+  useEffect(() => {
+    //Carousel items processing
+    let carouselItemsTemp = [];
+    store.cover &&
+      carouselItemsTemp.push(
+        <View style={styles.carouselAdvertisementItem}>
+          <Image
+            style={styles.carouselAdvertisementImg}
+            source={{ uri: store.cover ? store.cover.url : '' }}
+            alt='cover'
+          />
+        </View>
+      );
+    let productsItems = [];
+    if (store.products) {
+      let featuredProducts = store.products.filter(
+        (product) => product.featured
+      );
+      for (let i = 0; i < featuredProducts.length; i += 2) {
+        productsItems.push(
+          featuredProducts.length - i === 1 ? (
+            <View style={styles.carouselItem}>
+              <CarouselProduct product={featuredProducts[i]} />
+            </View>
+          ) : (
+            <View style={styles.carouselItem}>
+              <CarouselProduct product={featuredProducts[i]} />
+              <CarouselProduct product={featuredProducts[i + 1]} />
+            </View>
+          )
+        );
+      }
+    }
+    carouselItemsTemp = [...carouselItemsTemp, ...productsItems];
+    store.secondaryCover &&
+      carouselItemsTemp.push(
+        <View style={styles.carouselAdvertisementItem}>
+          <Image
+            style={styles.carouselAdvertisementImg}
+            source={{
+              uri: store.secondaryCover ? store.secondaryCover.url : '',
+            }}
+            alt='secondary cover'
+          />
+        </View>
+      );
+    setCarouselItems(carouselItemsTemp);
+  }, [store]);
 
   useEffect(() => {
     if (productToLoad && !productLoaded) {
@@ -191,6 +256,68 @@ function Store({ navigation, route }) {
       </View>
     );
   }
+
+  function CarouselProduct({ product }) {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('product', {
+            product,
+            storeId: store.id,
+          });
+        }}
+        style={styles.carouselProduct}
+      >
+        <Image
+          source={{ uri: product && product.image.url }}
+          alt={product.name}
+          style={styles.carouselProductImage}
+        />
+        <View style={styles.carouselProductInfo}>
+          <Text numberOfLines={2} style={styles.carouselProductName}>
+            {product.name}
+          </Text>
+          <Text style={styles.carouselProductPrice}>
+            {product.formattedPrice}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  function CarouselComponent() {
+    return (
+      <>
+        <Carousel
+          ref={carousel}
+          data={carouselItems}
+          renderItem={({ item, index }) => item}
+          layout={'default'}
+          sliderWidth={CAROUSEL_SLIDER_WIDTH}
+          itemWidth={CAROUSEL_ITEM_WIDTH}
+          containerCustomStyle={styles.carouselContainer}
+          autoplay
+          loop
+        />
+        <View style={styles.carouselSnapArea}>
+          <CarouselSnapButton
+            name='arrow-left'
+            onPress={() => {
+              carousel.current.snapToPrev();
+            }}
+            style={styles.carouselLeftSnapButton}
+          />
+          <CarouselSnapButton
+            name='arrow-right'
+            onPress={() => {
+              carousel.current.snapToNext();
+            }}
+          />
+        </View>
+      </>
+    );
+  }
+
   function ShelfLife(params) {
     const { shelfLifeStart, shelfLifeEnd, align } = params;
     if (!shelfLifeStart || !shelfLifeEnd) {
@@ -203,150 +330,120 @@ function Store({ navigation, route }) {
     );
   }
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <FlatList
-            data={productsFound !== null ? productsFound : store.categories}
-            keyExtractor={(item) => String(item.id)}
-            ListHeaderComponent={
-              <>
-                {store.cover && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('info');
-                    }}
-                    style={styles.showcaseLogoButton}
-                  >
-                    <Image
-                      source={{ uri: store.cover.url }}
-                      style={styles.showcaseLogo}
-                    />
-                  </TouchableOpacity>
-                )}
-                <ShelfLife
-                  align='right'
-                  shelfLifeStart={store.shelfLifeStart}
-                  shelfLifeEnd={store.shelfLifeEnd}
-                />
-                {store.partners && (
-                  <View>
-                    <Text style={styles.subtitle}>PARCEIROS</Text>
-                    <FlatList
-                      horizontal
-                      data={store.partners.filter(
-                        (partner) => !partner.sponsorship
-                      )}
-                      keyExtractor={(item) => String(item.id)}
-                      style={styles.patnerList}
-                      renderItem={({ item }) => (
-                        <BorderlessButton
-                          style={styles.partnerItem}
-                          onPress={() => {
-                            navigation.navigate('partner', {
-                              partner: item,
-                            });
-                          }}
-                        >
-                          {item.logo && (
-                            <Image
-                              source={{ uri: item.logo.url }}
-                              style={styles.partnerLogo}
-                            />
-                          )}
-                          <Text numberOfLines={2} style={styles.partnerName}>
-                            {item.name}
-                          </Text>
-                        </BorderlessButton>
-                      )}
-                    />
-                  </View>
-                )}
-                {store.products && (
-                  <View>
-                    <Text style={styles.subtitle}>PRODUTOS EM DESTAQUE</Text>
-                    <FlatList
-                      numColumns={3}
-                      data={store.products.filter(
-                        (product) => product.featured
-                      )}
-                      keyExtractor={(item) => String(item.id)}
-                      style={styles.featuredProductsList}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity
-                          style={styles.featuredProductItem}
-                          onPress={() => {
-                            navigation.navigate('product', {
-                              product: item,
-                              storeId: store.id,
-                            });
-                          }}
-                        >
-                          <Image
-                            source={{ uri: item.image.url }}
-                            style={styles.featuredProductImage}
-                          />
-                        </TouchableOpacity>
-                      )}
-                    />
-                  </View>
-                )}
-                <TextInput
-                  label='Buscar'
-                  left={
-                    <TextInput.Icon
-                      name={() => (
-                        <Icon name='search' size={20} color={colors.encarte} />
-                      )}
-                      onPress={() => {}}
-                    />
-                  }
-                  theme={{ colors: { primary: colors.encarte } }}
-                  onChangeText={handleSearch}
-                  returnKeyType='search'
-                />
-              </>
-            }
-            renderItem={({ item }) =>
-              productsFound !== null ? (
-                <ProductItem product={item} />
-              ) : (
-                item.products.length > 0 && (
-                  <FlatList
-                    data={item.products}
-                    keyExtractor={(product) => String(product.id)}
-                    ListHeaderComponent={
-                      <Text style={styles.categoryName}>{item.name}</Text>
-                    }
-                    renderItem={({ item: product }) => (
-                      <ProductItem product={product} />
-                    )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <FlatList
+              data={productsFound !== null ? productsFound : store.categories}
+              keyExtractor={(item) => String(item.id)}
+              ListHeaderComponent={
+                <>
+                  <ShelfLife
+                    align='right'
+                    shelfLifeStart={store.shelfLifeStart}
+                    shelfLifeEnd={store.shelfLifeEnd}
                   />
-                )
-              )
-            }
-            ListFooterComponent={
-              <View style={styles.footer}>
-                {store.logo && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('info');
-                    }}
-                  >
-                    <Image
-                      source={{ uri: store.logo.url }}
-                      style={styles.showcaseLogo}
+                  {store.partners && (
+                    <View>
+                      <Text style={styles.subtitle}>PARCEIROS</Text>
+                      <FlatList
+                        horizontal
+                        data={store.partners.filter(
+                          (partner) => !partner.sponsorship
+                        )}
+                        keyExtractor={(item) => String(item.id)}
+                        style={styles.patnerList}
+                        renderItem={({ item }) => (
+                          <BorderlessButton
+                            style={styles.partnerItem}
+                            onPress={() => {
+                              navigation.navigate('partner', {
+                                partner: item,
+                              });
+                            }}
+                          >
+                            {item.logo && (
+                              <Image
+                                source={{ uri: item.logo.url }}
+                                style={styles.partnerLogo}
+                              />
+                            )}
+                            <Text numberOfLines={2} style={styles.partnerName}>
+                              {item.name}
+                            </Text>
+                          </BorderlessButton>
+                        )}
+                      />
+                    </View>
+                  )}
+                  <CarouselComponent
+                    featuredProducts={
+                      store.products &&
+                      store.products.filter((products) => products.featured)
+                    }
+                  />
+                  <TextInput
+                    label='Buscar'
+                    left={
+                      <TextInput.Icon
+                        name={() => (
+                          <Icon
+                            name='search'
+                            size={20}
+                            color={colors.encarte}
+                          />
+                        )}
+                        onPress={() => {}}
+                      />
+                    }
+                    theme={{ colors: { primary: colors.encarte } }}
+                    onChangeText={handleSearch}
+                    returnKeyType='search'
+                  />
+                </>
+              }
+              renderItem={({ item }) =>
+                productsFound !== null ? (
+                  <ProductItem product={item} />
+                ) : (
+                  item.products.length > 0 && (
+                    <FlatList
+                      data={item.products}
+                      keyExtractor={(product) => String(product.id)}
+                      ListHeaderComponent={
+                        <Text style={styles.categoryName}>{item.name}</Text>
+                      }
+                      renderItem={({ item: product }) => (
+                        <ProductItem product={product} />
+                      )}
                     />
-                  </TouchableOpacity>
-                )}
-                <View style={styles.socialNetworks}>
-                  {store.facebook && store.facebook.length > 0 ? (
+                  )
+                )
+              }
+              ListFooterComponent={
+                <View style={styles.footer}>
+                  {store.logo && (
                     <TouchableOpacity
                       onPress={() => {
-                        Linking.canOpenURL(`facebook://${store.facebook}`).then(
-                          (supported) => {
+                        navigation.navigate('info');
+                      }}
+                    >
+                      <Image
+                        source={{ uri: store.logo.url }}
+                        style={styles.showcaseLogo}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  <View style={styles.socialNetworks}>
+                    {store.facebook && store.facebook.length > 0 ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          Linking.canOpenURL(
+                            `facebook://${store.facebook}`
+                          ).then((supported) => {
                             if (supported) {
                               return Linking.openURL(
                                 `facebook://${store.facebook}`
@@ -356,91 +453,91 @@ function Store({ navigation, route }) {
                             return Linking.openURL(
                               `https://facebook.com/${store.facebook}`
                             );
-                          }
-                        );
-                      }}
-                    >
-                      <CommunityIcon
-                        name='facebook'
-                        size={40}
-                        style={styles.facebook}
-                      />
-                    </TouchableOpacity>
-                  ) : null}
-                  {store.instagram && store.instagram.length > 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        Linking.canOpenURL(
-                          `instagram://${store.instagram}`
-                        ).then((supported) => {
-                          if (supported) {
-                            return Linking.openURL(
-                              `instagram://${store.instagram}`
-                            );
-                          }
+                          });
+                        }}
+                      >
+                        <CommunityIcon
+                          name='facebook'
+                          size={40}
+                          style={styles.facebook}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
+                    {store.instagram && store.instagram.length > 0 ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          Linking.canOpenURL(
+                            `instagram://${store.instagram}`
+                          ).then((supported) => {
+                            if (supported) {
+                              return Linking.openURL(
+                                `instagram://${store.instagram}`
+                              );
+                            }
 
-                          return Linking.openURL(
-                            `https://instagram.com/${store.instagram}`
-                          );
-                        });
-                      }}
-                    >
-                      <CommunityIcon
-                        name='instagram'
-                        size={40}
-                        style={styles.instagram}
-                      />
-                    </TouchableOpacity>
-                  ) : null}
-                  {store.whatsapp && store.whatsapp.length > 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        Linking.canOpenURL(
-                          `whatsapp://send?phone=${store.whatsapp}`
-                        ).then((supported) => {
-                          if (supported) {
                             return Linking.openURL(
-                              `whatsapp://send?phone=${store.whatsapp}`
+                              `https://instagram.com/${store.instagram}`
                             );
-                          }
+                          });
+                        }}
+                      >
+                        <CommunityIcon
+                          name='instagram'
+                          size={40}
+                          style={styles.instagram}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
+                    {store.whatsapp && store.whatsapp.length > 0 ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          Linking.canOpenURL(
+                            `whatsapp://send?phone=${store.whatsapp}`
+                          ).then((supported) => {
+                            if (supported) {
+                              return Linking.openURL(
+                                `whatsapp://send?phone=${store.whatsapp}`
+                              );
+                            }
 
-                          return Linking.openURL(
-                            `https://api.whatsapp.com/send?phone=${store.whatsapp}`
-                          );
-                        });
-                      }}
-                    >
-                      <CommunityIcon
-                        name='whatsapp'
-                        size={40}
-                        style={styles.whatsapp}
-                      />
-                    </TouchableOpacity>
+                            return Linking.openURL(
+                              `https://api.whatsapp.com/send?phone=${store.whatsapp}`
+                            );
+                          });
+                        }}
+                      >
+                        <CommunityIcon
+                          name='whatsapp'
+                          size={40}
+                          style={styles.whatsapp}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
+                  </View>
+                  <Text style={styles.merelyIllustrativeImages}>
+                    IMAGENS MERAMENTE ILUSTRATIVAS**
+                  </Text>
+                  <ShelfLife
+                    align='center'
+                    shelfLifeStart={store.shelfLifeStart}
+                    shelfLifeEnd={store.shelfLifeEnd}
+                  />
+                  {store.address && store.city ? (
+                    <>
+                      <Text style={styles.info}>Endereço: {store.address}</Text>
+                      <Text style={styles.info}>{store.city}.</Text>
+                    </>
+                  ) : null}
+                  {store.phone ? (
+                    <Text style={styles.info}>Contato: {store.phone}</Text>
                   ) : null}
                 </View>
-                <Text style={styles.merelyIllustrativeImages}>
-                  IMAGENS MERAMENTE ILUSTRATIVAS**
-                </Text>
-                <ShelfLife
-                  align='center'
-                  shelfLifeStart={store.shelfLifeStart}
-                  shelfLifeEnd={store.shelfLifeEnd}
-                />
-                {store.address && store.city ? (
-                  <>
-                    <Text style={styles.info}>Endereço: {store.address}</Text>
-                    <Text style={styles.info}>{store.city}.</Text>
-                  </>
-                ) : null}
-                {store.phone ? (
-                  <Text style={styles.info}>Contato: {store.phone}</Text>
-                ) : null}
-              </View>
-            }
-          />
-        </>
-      )}
-    </View>
+              }
+            />
+          </>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
