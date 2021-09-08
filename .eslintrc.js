@@ -28,6 +28,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-console': 'off',
     camelcase: 'off',
+    endOfLine: 'auto',
   },
   settings: {
     'import/resolver': {
