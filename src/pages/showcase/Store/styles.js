@@ -26,7 +26,7 @@ export default StyleSheet.create({
   carouselContainer: {},
   carouselItem: {
     alignSelf: 'center',
-    width: '85%',
+    width: '80%',
     height: 200,
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -71,7 +71,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   carouselAdvertisementItem: {
-    width: '85%',
+    width: '80%',
     height: 200,
     alignItems: 'center',
     alignSelf: 'center',

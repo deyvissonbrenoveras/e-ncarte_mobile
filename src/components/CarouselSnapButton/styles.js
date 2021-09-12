@@ -4,11 +4,12 @@ export default StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
-    width: 24,
-    height: 24,
+    borderRadius: 15,
+    width: 30,
+    height: 30,
     backgroundColor: '#494949',
     opacity: 0.9,
+    margin: 4,
   },
   icon: {
     color: '#fff',
