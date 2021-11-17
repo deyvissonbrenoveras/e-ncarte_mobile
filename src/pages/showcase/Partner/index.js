@@ -28,7 +28,6 @@ function Partner({ route, navigation }) {
   useEffect(() => {
     dispatch(loadPartnerRequest(partnerId));
   }, []);
-
   function HeaderComponent() {
     return (
       <>
@@ -39,7 +38,7 @@ function Partner({ route, navigation }) {
           />
         )}
         <Text style={styles.partnerName}>{partner.name}</Text>
-        {partner.site.length > 0 && (
+        {partner.site && partner.site.length > 0 ? (
           <>
             <Text style={styles.subtitle}>Endereço</Text>
             <TouchableOpacity
@@ -54,15 +53,15 @@ function Partner({ route, navigation }) {
               </Text>
             </TouchableOpacity>
           </>
-        )}
-        {partner.regionalAgent.length > 0 && (
+        ) : null}
+        {partner.regionalAgent && partner.regionalAgent.length > 0 ? (
           <>
             <Text style={styles.subtitle}>Contato</Text>
             <Text numberOfLines={1} style={styles.contact}>
               {partner.regionalAgent}
             </Text>
           </>
-        )}
+        ) : null}
         {(partner.facebook || partner.instagram || partner.whatsapp) && (
           <>
             <Text style={styles.subtitle}>Redes sociais</Text>
