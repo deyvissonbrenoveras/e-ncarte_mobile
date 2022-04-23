@@ -65,7 +65,9 @@ function Store({ navigation, route }) {
     if (showcase.products) {
       products = showcase.products.map((pdt) => ({
         ...pdt,
-        formattedPrice: formatPrice(pdt.price),
+        formattedPrice: formatPrice(
+          pdt.Products_Stores.customPrice || pdt.price
+        ),
       }));
 
       categories = products

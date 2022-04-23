@@ -49,7 +49,8 @@ function Product({ route, navigation }) {
   }
   useEffect(() => {
     if (product) {
-      setTotal(formatPrice(amount * product.price));
+      const price = product.Products_Stores.customPrice || product.price;
+      setTotal(formatPrice(amount * price));
     }
   }, [amount, product]);
   function ProductItemPrice(params) {

@@ -29,11 +29,11 @@ function Cart() {
 
   const [total, setTotal] = useState(formatPrice(0));
   useEffect(() => {
-    const newTotal = cart.reduce(
-      (accumulator, currentProduct) =>
-        accumulator + currentProduct.price * currentProduct.amount,
-      0
-    );
+    const newTotal = cart.reduce((accumulator, currentProduct) => {
+      const price =
+        currentProduct.Products_Stores.customPrice || currentProduct.price;
+      return accumulator + price * currentProduct.amount;
+    }, 0);
     setTotal(formatPrice(newTotal));
   }, [cart]);
   async function handleSend() {
