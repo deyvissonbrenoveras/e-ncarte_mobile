@@ -10,20 +10,23 @@ export default function cart(state = INITIAL_STATE, action) {
       return produce(state, (draft) => {
         const { storeId, product, amount } = action.payload;
         const store = draft.cart.filter((crt) => crt.storeId === storeId)[0];
+        const price = product.Products_Stores.customPrice || product.price;
         if (store) {
           const productExists = store.products.filter(
             (prod) => prod.id === product.id
           )[0];
           if (productExists) {
             productExists.amount += amount;
+            const productExistsPrice =
+              productExists.Products_Stores.customPrice || productExists.price;
             productExists.total = formatPrice(
-              productExists.price * productExists.amount
+              productExistsPrice * productExists.amount
             );
           } else {
             store.products.push({
               ...product,
               amount,
-              total: formatPrice(product.price * amount),
+              total: formatPrice(price * amount),
             });
           }
         } else {
@@ -33,7 +36,7 @@ export default function cart(state = INITIAL_STATE, action) {
               {
                 ...product,
                 amount,
-                total: formatPrice(product.price * amount),
+                total: formatPrice(price * amount),
               },
             ],
           });
@@ -58,7 +61,10 @@ export default function cart(state = INITIAL_STATE, action) {
           if (productExists) {
             if (amount >= 1 && amount <= 500) {
               productExists.amount = amount;
-              productExists.total = formatPrice(productExists.price * amount);
+              const price =
+                productExists.Products_Stores.customPrice ||
+                productExists.price;
+              productExists.total = formatPrice(price * amount);
             }
           }
         }
