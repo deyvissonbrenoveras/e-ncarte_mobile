@@ -112,7 +112,7 @@ const Info = () => {
               <Text style={styles.subtitle}>Endereço</Text>
               <View style={styles.address}>
                 <Text style={styles.addressText}>
-                  {`${store.address}, ${store.city}.`}
+                  {`${store.address}, ${store.city.name} - ${store.city.state.uf}.`}
                 </Text>
               </View>
             </>
