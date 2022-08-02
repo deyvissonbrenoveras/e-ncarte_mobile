@@ -527,7 +527,9 @@ function Store({ navigation, route }) {
                   {store.address && store.city ? (
                     <>
                       <Text style={styles.info}>Endereço: {store.address}</Text>
-                      <Text style={styles.info}>{store.city}.</Text>
+                      <Text style={styles.info}>
+                        {store.city.name} - {store.city.state.uf}.
+                      </Text>
                     </>
                   ) : null}
                   {store.phone ? (
