@@ -13,12 +13,16 @@ import PriceTypeEnum from '~/util/PriceTypeEnum';
 import { formatPrice } from '~/util/format';
 import styles from './styles';
 import { addProduct } from '~/store/modules/cart/actions';
+import {
+  getQuantityToAdd,
+  getQuantityToRemove,
+} from '../../../helpers/productQuantityCalculationHelper';
 
 function Product({ route, navigation }) {
   const dispatch = useDispatch();
   const { product, storeId } = route.params;
 
-  const [amount, setAmount] = useState('1');
+  const [amount, setAmount] = useState(1);
   const [total, setTotal] = useState(null);
 
   function handleAddProduct() {
@@ -27,25 +31,16 @@ function Product({ route, navigation }) {
   }
 
   function decreaseAmount() {
-    if (amount > 1) {
-      setAmount(String(Number(amount) - 1));
+    const minimumValue = product.fractionedQuantity ? 0.1 : 1;
+    if (amount > minimumValue) {
+      const newAmount = getQuantityToRemove(product.fractionedQuantity, amount);
+      setAmount(newAmount);
     }
   }
 
   function increaseAmount() {
-    setAmount(String(Number(amount) + 1));
-  }
-  function handleAmountChange(value) {
-    const valueNumber = Number(value);
-    if (valueNumber >= 0 && valueNumber <= 500) {
-      setAmount(String(valueNumber));
-    }
-  }
-  async function amountFocusOut(event) {
-    const valueNumber = Number(event.nativeEvent.text);
-    if (valueNumber < 1 || valueNumber > 500) {
-      await setAmount('1');
-    }
+    const newAmount = getQuantityToAdd(product.fractionedQuantity, amount);
+    setAmount(newAmount);
   }
   useEffect(() => {
     if (product) {
@@ -99,13 +94,7 @@ function Product({ route, navigation }) {
           <TouchableOpacity onPress={decreaseAmount}>
             <Icon style={styles.iconColor} name='remove' size={25} />
           </TouchableOpacity>
-          <TextInput
-            style={styles.amountInput}
-            keyboardType='number-pad'
-            value={amount}
-            onChangeText={handleAmountChange}
-            onEndEditing={amountFocusOut}
-          />
+          <Text style={styles.amountInput}>{amount}</Text>
           <TouchableOpacity onPress={increaseAmount}>
             <Icon style={styles.iconColor} name='add' size={25} />
           </TouchableOpacity>
