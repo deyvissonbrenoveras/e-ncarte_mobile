@@ -59,13 +59,19 @@ export default function cart(state = INITIAL_STATE, action) {
             (prod) => prod.id === productId
           )[0];
           if (productExists) {
-            if (amount >= 1 && amount <= 500) {
-              productExists.amount = amount;
-              const price =
-                productExists.Products_Stores.customPrice ||
-                productExists.price;
-              productExists.total = formatPrice(price * amount);
+            let updatedAmount;
+
+            if (amount < 0.1) {
+              updatedAmount = 0.1;
+            } else if (amount > 500) {
+              updatedAmount = 500;
+            } else {
+              updatedAmount = amount;
             }
+            productExists.amount = updatedAmount;
+            const price =
+              productExists.Products_Stores.customPrice || productExists.price;
+            productExists.total = formatPrice(price * updatedAmount);
           }
         }
       });

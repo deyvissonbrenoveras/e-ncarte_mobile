@@ -16,6 +16,11 @@ import PriceTypeEnum from '~/util/PriceTypeEnum';
 import styles from './styles';
 import theme from '~/styles/theme';
 
+import {
+  getQuantityToAdd,
+  getQuantityToRemove,
+} from '../../../helpers/productQuantityCalculationHelper';
+
 function Cart() {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
@@ -70,11 +75,19 @@ function Cart() {
   function handleRemove(productId) {
     dispatch(removeProduct(store.id, productId));
   }
-  function handleRemoveAmount(productId, amount) {
-    dispatch(changeAmount(store.id, productId, amount));
+  function handleRemoveAmount(product) {
+    const newAmount = getQuantityToRemove(
+      product.fractionedQuantity,
+      product.amount
+    );
+    dispatch(changeAmount(store.id, product.id, newAmount));
   }
-  function handleAddAmount(productId, amount) {
-    dispatch(changeAmount(store.id, productId, amount));
+  function handleAddAmount(product) {
+    const newAmount = getQuantityToAdd(
+      product.fractionedQuantity,
+      product.amount
+    );
+    dispatch(changeAmount(store.id, product.id, newAmount));
   }
   function ProductItemPrice(params) {
     const { product: prod } = params;
@@ -135,10 +148,7 @@ function Cart() {
                       <View style={styles.amountArea}>
                         <TouchableOpacity
                           onPress={() => {
-                            handleRemoveAmount(
-                              product.id,
-                              String(Number(product.amount) - 1)
-                            );
+                            handleRemoveAmount(product);
                           }}
                         >
                           <Icon
@@ -152,10 +162,7 @@ function Cart() {
                         </Text>
                         <TouchableOpacity
                           onPress={() => {
-                            handleAddAmount(
-                              product.id,
-                              String(Number(product.amount) + 1)
-                            );
+                            handleAddAmount(product);
                           }}
                         >
                           <Icon style={styles.iconColor} name='add' size={15} />
