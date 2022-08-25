@@ -59,10 +59,11 @@ export default function cart(state = INITIAL_STATE, action) {
             (prod) => prod.id === productId
           )[0];
           if (productExists) {
+            let minQuantity = productExists.fractionedQuantity ? 0.1 : 1;
             let updatedAmount;
 
-            if (amount < 0.1) {
-              updatedAmount = 0.1;
+            if (amount < minQuantity) {
+              updatedAmount = minQuantity;
             } else if (amount > 500) {
               updatedAmount = 500;
             } else {
